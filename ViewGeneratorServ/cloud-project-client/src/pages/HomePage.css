@@ -1,0 +1,28 @@
+* {
+	padding: 0px;
+	margin: 0px;
+	box-sizing: border-box;
+	font-family: "Roboto", sans-serif;
+}
+
+.content-wrap {
+	width: 100vw;
+	max-width: 100%;
+	min-width: 300px;
+	height: 100%;
+	display: flex;
+	flex-flow: row nowrap;
+}
+
+.content {
+	display: flex;
+	flex-direction: column;
+	width: 100%;
+	position: relative;
+}
+
+
+.navbar-list {
+    
+    list-style-type: none;
+}
