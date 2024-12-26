@@ -4,6 +4,9 @@
 /node_modules
 /.pnp
 .pnp.js
+/cloud_storage/node_modules
+/UserAccMgmtServ/node_modules
+/ViewGeneratorServ/cloud-project-client/node_modules
 
 # testing
 /coverage
