@@ -15,18 +15,10 @@ const userSchema = new mongoose.Schema({
     type: String,
     required: true
   },
-  avatar: {
-    type: String,
-    default: ''
-  },
-  subscribers: {
-    type: Number,
-    default: 0
-  },
-  subscribedTo: [{
-    type: mongoose.Schema.Types.ObjectId,
-    ref: 'User'
-  }]
+  dailyUsageMB: { type: Number, default: 0 },
+  dataStoredMB: { type: Number, default: 0 },
+  lastReset: { type: Date, default: new Date() },
+  
 }, { timestamps: true });
 
 const User = mongoose.model('User', userSchema);

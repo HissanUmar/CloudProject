@@ -1,8 +1,10 @@
 import React, { useState } from 'react';
 import axios from 'axios';
+import {useNavigate} from 'react-router-dom'
 
 
 const AuthPages = () => {
+  const navigate = useNavigate();
   const [isLogin, setIsLogin] = useState(true);
   const [formData, setFormData] = useState({
     name: '',
@@ -146,6 +148,7 @@ const AuthPages = () => {
               type="button"
               className="btn btn-link p-0"
               onClick={() => {
+                navigate('/sign-up');
                 setIsLogin(!isLogin);
                 setFormData({ name: '', email: '', password: '' });
                 setErrors({});

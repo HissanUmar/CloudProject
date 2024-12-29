@@ -27,11 +27,11 @@ dotenv.config();
 app.use(cors());
 
 
-const storage = new Storage({ keyFilename: 'my-project-007-436010-b825051ace0c.json' });
+const storage = new Storage({ keyFilename: 'my-project-007-436010-40d85edc0764.json' });
 const bucket = storage.bucket('video-bucket-24');
 
 
-app.post('/upload', fetchuser, upload,async(req, res) => {
+app.post('/upload', fetchuser, upload, async (req, res) => {
 
 
     const auth_token = req.header("auth_token");
@@ -54,8 +54,8 @@ app.post('/upload', fetchuser, upload,async(req, res) => {
     const name = req.body.name;
     const files = req.files.files;
     const userId = req.userId;
-    
-    console.log("This is the userId",userId);
+
+    console.log("This is the userId", userId);
     //console.log(req.body.name);
     //console.log(req.files);
 
@@ -66,30 +66,30 @@ app.post('/upload', fetchuser, upload,async(req, res) => {
 
     console.log("to try block");
 
-    try{
+    try {
         const folderPath = `${userId}`;
-        
-        const [existingFiles] = await bucket.getFiles({prefix:folderPath});
+
+        const [existingFiles] = await bucket.getFiles({ prefix: folderPath });
         const totalSize = await existingFiles.reduce(async (accPromise, currentFile) => {
             const acc = await accPromise;
             const [metadata] = await currentFile.getMetadata();
-            return acc + parseInt(metadata.size, 10); 
+            return acc + parseInt(metadata.size, 10);
         }, Promise.resolve(0));
 
         console.log("No error after promise");
 
         const newFilesSize = files.reduce((acc, file) => acc + file.size, 0);
 
-        if(totalSize + newFilesSize > (50 * 1024 * 1024)){
+        if (totalSize + newFilesSize > (50 * 1024 * 1024)) {
             return res.status(400).json({
                 message: 'Limit exceeded: Total folder size cannot exceed 50 MB',
-              });
-        } 
+            });
+        }
 
-        for(const file of files){
+        for (const file of files) {
             let fileFormat = "image"
 
-            if(file.mimetype.includes('video')){
+            if (file.mimetype.includes('video')) {
                 fileFormat = "video"
             }
 
@@ -99,16 +99,33 @@ app.post('/upload', fetchuser, upload,async(req, res) => {
             const cloudFile = bucket.file(destination);
             await cloudFile.save(file.buffer, {
                 metadata: {
-                contentType: file.mimetype,
+                    contentType: file.mimetype,
                 },
             });
+
+            const response = fetch('http://localhost:5000/logging', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    event: "upload",            // Event type (e.g., upload, stream)
+                    status: "success",          // Event status (e.g., success, failure)
+                    timestamp: new Date(),  // Timestamp of event
+                    user_id: userId,         // Unique user identifier
+                    fileName: `${req.body.name}`,     // File name (if applicable)
+                })
+            });
         }
+
+
+
         res.json({
             message: `File uploaded successfully to ${folderPath}`,
             ok: true,
-          });
+        });
     }
-    catch(err){
+    catch (err) {
         console.error('Error uploading file:', err);
         console.log(err);
         res.status(500).json({ error: 'Error uploading file to bucket' });
@@ -117,13 +134,13 @@ app.post('/upload', fetchuser, upload,async(req, res) => {
 });
 
 
-app.delete('/delete', async(req, res) => {
+app.delete('/delete', async (req, res) => {
     const { name, fileName } = req.query;
 
     console.log(name, fileName);
 
-    if(!name || !fileName) { 
-        return res.status(400).json({error : 'userName and fileName are required'});
+    if (!name || !fileName) {
+        return res.status(400).json({ error: 'userName and fileName are required' });
     }
 
     try {
@@ -132,31 +149,78 @@ app.delete('/delete', async(req, res) => {
 
         await file.delete();
 
-        res.json({message : `File at location ${filePath} deleted.`});
+        res.json({ message: `File at location ${filePath} deleted.` });
+
+        const response = fetch('http://localhost:5000/logging', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                event: "delete",            // Event type (e.g., upload, stream)
+                status: "success",          // Event status (e.g., success, failure)
+                timestamp: new Date(),  // Timestamp of event
+                user_id: userId,         // Unique user identifier
+                fileName: `${name}`,     // File name (if applicable)
+            })
+        });
 
     }
-    catch(err) {
+    catch (err) {
         console.error("Error deleting file: ", err);
-        res.json({error: 'Error while deleting the file at the location.'});
+        res.json({ error: 'Error while deleting the file at the location.' });
     }
 
 });
 
-app.get('/all-files', async(req, res) => {
-    
-    const { name } = req.query;
+app.get('/all-files', fetchuser, async (req, res) => {
 
-    if (!name) {
-        return res.status(400).json({ error: 'Folder name is required' });
-    }
+    const userId = req.userId;
+
+    console.log("ID: ", userId)
+    // const { name } = req.query;
+
+    // if (!name) {
+    //     return res.status(400).json({ error: 'Folder name is required' });
+    // }
 
     try {
-        const folderPath = `${name}`;
-        const [files] = await bucket.getFiles(({prefix: folderPath}));
+        const folderPath = `${userId}/image/`;
+        const [files] = await bucket.getFiles(({ prefix: folderPath }));
 
-        const fileNames = files.map(file => file.name);
+        //const fileNames = files.map(file => file.name);
 
-        res.json({ objects: fileNames });
+        const fileData = await Promise.all(
+            files.map(async (file) => {
+                const signedURL = await file.getSignedUrl({
+                    action: 'read',
+                    expires: Date.now() + 100 * 60 * 60
+                });
+
+                return {
+                    name: file.name,
+                    url: signedURL[0] // Get the signed URL
+                };
+            })
+        );
+
+        console.log("File data structured");
+
+        const response = fetch('http://localhost:5000/logging', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                event: "file-access",            // Event type (e.g., upload, stream)
+                status: "success",          // Event status (e.g., success, failure)
+                timestamp: new Date(),  // Timestamp of event
+                user_id: userId,         // Unique user identifier   
+                fileName: folderPath,
+            })
+        });
+
+        res.json({ objects: fileData });
 
     }
     catch (err) {
@@ -205,6 +269,20 @@ app.get('/stream-video/', async (req, res) => {
             })
             .pipe(res);
 
+        const response = fetch('http://localhost:5000/logging', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                event: "stream",            // Event type (e.g., upload, stream)
+                status: "success",          // Event status (e.g., success, failure)
+                timestamp: new Date(),  // Timestamp of event
+                user_id: userId,         // Unique user identifier   
+                fileName: videoName,
+            })
+        });
+
     } catch (err) {
         console.error('Error:', err);
         res.status(500).send('Internal server error');
@@ -218,5 +296,5 @@ app.get('/stream-video/', async (req, res) => {
 
 app.listen(port, () => {
     console.log(`Server running on http://localhost:${port}`);
-  });
+});
 

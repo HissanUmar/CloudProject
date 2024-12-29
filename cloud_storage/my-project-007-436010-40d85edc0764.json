@@ -1,0 +1,13 @@
+{
+  "type": "service_account",
+  "project_id": "my-project-007-436010",
+  "private_key_id": "40d85edc0764db0570d4d93886811ebe121bcb75",
+  "private_key": "-----BEGIN PRIVATE KEY-----\nMIIEvgIBADANBgkqhkiG9w0BAQEFAASCBKgwggSkAgEAAoIBAQCUSBstaWgENFYF\nIRG9Zip6ybqcpKdnT8tA/DqVpfMXQYOA6KbzqokreLfzArerM2k9mGlzUxMhj+GJ\nm3jZVtIUVHGlrhLrfE09nYMmj3OtixLPrie7Z9+GwvJiDijJElD5SUKCDO0I/woe\njsYp8uHy2MhsIY4sEoKG2FFBRe1nsx3W9GQ7Xam33Mad1X0hZCpJ9BpGkXPzI3Hl\nGeZKTnXcIU7uyNJBh2wvVUT1Q76xaZ/oyi7GrVxmWtPLCsm8+jtV9bDPhM6MAzg7\nIgnbIY1laYc+NC+CZ2aOL6i7xJNM4VZ3nksuhQCD/ag/UYyoXflas95INYXOnEWy\nRvCaDTg9AgMBAAECggEAOeeYmVi+slmft9wMmepCL3YEhjQ0XT9HT6bP1+2Yqt2+\nFUKFI8VWUKARMXg/sj7e25tfnpXz9BjESeDpRfJGEoNRaBI8uDHv1d5jP1Uopr4X\nB/vp7yCmpPEPByShX7fj4B1wN+oFTIyP7pPxpaMAAj4Osk8+Pk6yIydpP7Sne2Va\nEhgmJ+0kfAUG2tO4iwElSTcYZAA7mVCRba/o5vMaAhprZUhRpl3Qi99FVpr1LRrd\n6oUhjrYYZVVWH6vytJ1gzk2YpGQo1BeDH694fDv7baJsX5/rLPWAlHmahGG0qSyZ\nGwg0KWtSrVs8JydFGxRrdw6i80pR+aqxEnK4LWL7vwKBgQDO2yqecXwtKzJwBueE\nSo9mZK/X50rjUQV5QkamnLhj9B6j09gmkGIOjJExOZycI2yGizy0FmRQyi0+WkHY\nkJO40BUv9KmcV37ANl0umPfLD9ypa5kEk94ohm16A8B9czV0vOot36CDHm5up4hq\nQ2aCs+DooT6Iwjs+s7R/lkO7cwKBgQC3gnxFvD5rbYaxrX7UrSRbCo8KRQ/NjPbW\nW8LQIwVEmBZ1jXJPMCIuQpMXM0UbwxQrrpNvarkyd5hTUOzE0Je65c0RdRfpZXQR\nHdNLQ6ONnNFPvE6B2n0LGHoBpVAxNaF51SNimOT1gU74lwlGip9Xm5hB3snXs9n1\n2l5XBq+xjwKBgAW9yYoKRlMOnuDDIEvoseA6rTLF5as3hXpfH4ziTq/fh7YuXBJ9\n8WrL9f+yxKkExq9ZT/8DnBct9WGEqc0z/hWkGOJy3P5M42S8XYu8jSwirZI6PU4G\nOKVRTdqUHhSdTP+Hesx5J4BcKN6DYeLpKgA4s+ZhC1ZKZdCQtlLQPeMHAoGBAJiM\nkGIoKnuDgQUTBOwnQqGsFVykLI7jMA7iGQCNHEP5ajIuc2gAy2lJTp1qsXhyosHt\nTgLA5VNet/IKw8iY3okvn1lzzXzoKaRQ9uUKRVvjkNyH3Xt09Z3TqxjTI+bEfoeY\n9uFv2GV+KPfeFofdlLhvUBLx8Tiu+fG2pdYSaNthAoGBAL3+grsfJ4nAx/Ct7OaV\n6th5F0TXbfQq2CG/q38gzs5Eh2B8tyhrD4hMECiFAForY7jYLF8uFjD6SwZL005v\nuHCOZhI1fWKd9s1BWx51Q6om1Lf6QZTDdV+M0lqjsibbnQF6jXFCuokjpe6iG7De\nZvEAOOS773emmKLMmE0hHyS+\n-----END PRIVATE KEY-----\n",
+  "client_email": "video-stream-service@my-project-007-436010.iam.gserviceaccount.com",
+  "client_id": "110066043708891431563",
+  "auth_uri": "https://accounts.google.com/o/oauth2/auth",
+  "token_uri": "https://oauth2.googleapis.com/token",
+  "auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs",
+  "client_x509_cert_url": "https://www.googleapis.com/robot/v1/metadata/x509/video-stream-service%40my-project-007-436010.iam.gserviceaccount.com",
+  "universe_domain": "googleapis.com"
+}

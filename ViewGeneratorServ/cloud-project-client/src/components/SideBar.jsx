@@ -1,28 +1,30 @@
+import React from 'react';
+import { useNavigate } from 'react-router-dom'
 
+import { Sidebar, Menu, MenuItem, SubMenu } from 'react-pro-sidebar';
 
+const SideBar = () => {
 
-<aside 
-className={`fixed top-16 bottom-0 left-0 bg-white shadow-lg transition-all duration-300 z-20
-  ${isSidebarOpen ? 'w-64' : 'w-16'}`}
->
-<nav className="h-full overflow-y-auto">
-  {navItems.map((item, index) => (
-    <div 
-      key={index} 
-      className={`flex items-center ${isSidebarOpen ? 'px-6' : 'justify-center px-4'} 
-        py-3 hover:bg-gray-100 cursor-pointer group relative`}
-    >
-      {item.icon}
-      {isSidebarOpen ? (
-        <span className="ml-4">{item.label}</span>
-      ) : (
-        <div className="absolute left-16 bg-gray-800 text-white px-2 py-1 rounded text-sm 
-          whitespace-nowrap opacity-0 invisible group-hover:opacity-100 
-          group-hover:visible transition-all z-30">
-          {item.label}
-        </div>
-      )}
+  const navigate = useNavigate();
+
+  const logout = () => {
+    localStorage.removeItem('token');
+    console.log('Logged out successfully');
+    // Navigate to the login page (or any other page after logout)
+    navigate('/login');
+  }
+
+  return (
+    <div className='' style={{ height: '100vh', position: 'fixed', width: '200px'}}>
+      <Sidebar style={{ height: '100vh', width: '200px' }}>
+        <Menu>
+          <MenuItem onClick={() => navigate('/home')}> Home </MenuItem>
+          <MenuItem onClick={() =>navigate('/upload')}> Upload </MenuItem>
+          <MenuItem onClick={logout}> Logout </MenuItem>
+        </Menu>
+      </Sidebar>
     </div>
-  ))}
-</nav>
-</aside>
+  );
+};
+
+export default SideBar;

@@ -1,7 +1,9 @@
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 
 const SignUpPage = () => {
+  const navigate = useNavigate();
   const [formData, setFormData] = useState({
     name: '',
     email: '',
@@ -58,6 +60,7 @@ const SignUpPage = () => {
       global.isUser = false;
       global.isVendor = true;
       alert("Signup successful!");
+      navigate('/home');
     } else {
       alert(json.error || "An error occurred during signup.");
     }

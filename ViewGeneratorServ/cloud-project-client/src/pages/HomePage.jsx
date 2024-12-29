@@ -1,125 +1,148 @@
-import React, { useState } from 'react';
-import { Menu, Search, Home, LineChart, Users, Library, History, Video, Clock, ThumbsUp } from 'lucide-react';
+import React, { useState, useEffect } from 'react';
+import { Menu, Home, Compass, PlaySquare, Clock, ThumbsUp, Video } from 'lucide-react';
+import { useNavigate } from 'react-router-dom'
+import Sidebar from '../components/SideBar';
+ 
+const YoutubeHomepage = () => {
+  const navigate = useNavigate();
+  
 
-const HomePage = () => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(true);
+  const [selectedVideo, setSelectedVideo] = useState(null);
+  const [videoData, setVideoData] = useState([]);
 
-  const videos = [
-    {
-      id: 1,
-      title: "Making a Delicious Pasta Carbonara",
-      channel: "Cooking Master",
-      views: "120K views",
-      timestamp: "2 days ago",
-      thumbnail: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQkAhvc-YjdwsimlEYdOknxcvbgNOVSHWjkWQ&s"
-    },
-    {
-      id: 2,
-      title: "Web Development Full Course 2024",
-      channel: "Tech Academy",
-      views: "50K views",
-      timestamp: "1 week ago",
-      thumbnail: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQkAhvc-YjdwsimlEYdOknxcvbgNOVSHWjkWQ&s"
-    },
-    {
-      id: 3,
-      title: "Morning Yoga Routine for Beginners",
-      channel: "Yoga Life",
-      views: "75K views",
-      timestamp: "3 days ago",
-      thumbnail: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQkAhvc-YjdwsimlEYdOknxcvbgNOVSHWjkWQ&s"
-    },
-    {
-      id: 4,
-      title: "Understanding React Hooks",
-      channel: "JavaScript Pro",
-      views: "200K views",
-      timestamp: "5 days ago",
-      thumbnail: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQkAhvc-YjdwsimlEYdOknxcvbgNOVSHWjkWQ&s"
-    },
-    {
-      id: 5,
-      title: "Travel Vlog: exploring Japan",
-      channel: "Travel With Me",
-      views: "150K views",
-      timestamp: "1 day ago",
-      thumbnail: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQkAhvc-YjdwsimlEYdOknxcvbgNOVSHWjkWQ&s"
-    },
-    {
-      id: 6,
-      title: "Guitar Lessons for Beginners",
-      channel: "Music Master",
-      views: "80K views",
-      timestamp: "4 days ago",
-      thumbnail: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQkAhvc-YjdwsimlEYdOknxcvbgNOVSHWjkWQ&s"
-    }
+  const navigationItems = [
+    { icon: Home, label: "Home" },
+    { icon: Compass, label: "Explore" },
+    { icon: PlaySquare, label: "Subscriptions" },
+    { icon: Clock, label: "History" },
+    { icon: ThumbsUp, label: "Liked Videos" },
   ];
 
-  const navItems = [
-    { icon: <Home className="h-5 w-5" />, label: "Home" },
-    { icon: <LineChart className="h-5 w-5" />, label: "Trending" },
-    { icon: <Users className="h-5 w-5" />, label: "Subscriptions" },
-    { icon: <Library className="h-5 w-5" />, label: "Library" },
-    { icon: <History className="h-5 w-5" />, label: "History" },
-    { icon: <Video className="h-5 w-5" />, label: "Your Videos" },
-    { icon: <Clock className="h-5 w-5" />, label: "Watch Later" },
-    { icon: <ThumbsUp className="h-5 w-5" />, label: "Liked Videos" },
-  ];
+  const handleVideoClick = (name) => {
+
+
+    const [folderName, videoName] = name.split('/image/')
+    console.log(folderName, "hello " , videoName);
+
+    navigate('/stream', { state: { videoName: videoName, folderName: folderName } });
+  };
+
+  useEffect(() => {
+
+    let uploadStatus = (localStorage.getItem('uploadStatus'));
+    uploadStatus = JSON.parse(uploadStatus);
+    console.log(uploadStatus.message);
+    const statusElement = document.querySelector('.upload-status').textContent = uploadStatus.message; // Create an element with this class on the homepage
+    
+    const fetchVideos = async () => {
+      try {
+        const token = localStorage.getItem('token');
+        const response = await fetch('http://localhost:8800/all-files', {
+          method: 'GET',
+          headers: {
+            'auth_token': `${token}`,
+            'Content-Type': 'application/json',
+          },
+        });
+
+        const data = await response.json();
+        if (!response.ok) {
+          throw new Error('Failed to fetch videos');
+        }
+
+        setVideoData(data.objects);
+      } catch (error) {
+        console.error('Error fetching video data:', error);
+      }
+    };
+
+    fetchVideos();
+  }, [null]);
 
   return (
-    <div className="relative w-full h-screen overflow-hidden">
-      {/* Header */}
-      <header className="fixed top-0 left-0 right-0 h-16 bg-white shadow-sm z-30 flex items-center px-4">
-        <Menu 
-          className="h-6 w-6 cursor-pointer hover:text-blue-500 transition-colors" 
-          onClick={() => setIsSidebarOpen(!isSidebarOpen)}
-        />
-        <span className="font-bold text-xl ml-4">VideoStream</span>
-        <div className="max-w-2xl w-full mx-auto px-4">
-          <div className="relative">
-            <input
-              type="text"
-              placeholder="Search"
-              className="w-full px-4 py-2 rounded-lg border focus:outline-none focus:border-blue-500"
-            />
-            <Search className="absolute right-3 top-2.5 h-5 w-5 text-gray-400" />
-          </div>
-        </div>
-      </header>
+    <div className=''>
+      
 
+
+      {/* Navbar */}
+      <nav className="bg-gradient-to-r from-green-400 to-teal-500 h-16  top-0 left-0 right-0 shadow-lg z-10 flex items-center px-6 ">
+  <div className="">
+    <Video className="text-black" style={{ paddingLeft: '12px' }}  size={70} />
+    <label className="ml-2 font-semibold fs-2 " style={{ gap: '80px' }}>ViewTube</label>
+  </div>
+</nav>
+
+
+
+   
       {/* Sidebar */}
+
+      <Sidebar />
+      
    
 
-      {/* Main Content */}
-      <main 
-        className={`absolute top-16 right-0 bottom-0 transition-all duration-300 overflow-y-auto bg-gray-100
-          ${isSidebarOpen ? 'left-64' : 'left-16'}`}
-      >
-        <div className="p-8">
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {videos.map((video) => (
-              <div key={video.id} className="bg-white rounded-lg shadow-md overflow-hidden">
+
+
+      <div className="flex pt-16 min-h-screen">
+        {/* Main Content */}
+        <label className="upload-status  d-flex justify-content-center "> Status </label>
+        <div className="container mt-4">
+          {selectedVideo ? (
+            <div className="row">
+              <div className="col-12">
                 <img
-                  src={video.thumbnail}
-                  alt={video.title}
-                  className="w-full object-cover aspect-video"
+                  src={selectedVideo.thumbnail}
+                  alt={selectedVideo.title}
+                  className="img-fluid rounded"
                 />
-                <div className="p-4">
-                  <h3 className="font-semibold text-lg mb-1">{video.title}</h3>
-                  <p className="text-gray-600">{video.channel}</p>
-                  <div className="flex items-center gap-2 text-sm text-gray-500 mt-1">
-                    <span>{video.views}</span>
-                    <span>•</span>
-                    <span>{video.timestamp}</span>
+                <h1 className="mt-3">{selectedVideo.title}</h1>
+                <div className="text-muted mb-3">
+                  <span>{selectedVideo.channel}</span>
+                  <span className="mx-2">•</span>
+                  <span>{selectedVideo.views} views</span>
+                </div>
+                <button
+                  onClick={() => setSelectedVideo(null)}
+                  className="btn btn-outline-primary"
+                >
+                  Back to Videos
+                </button>
+              </div>
+            </div>
+          ) : (
+            <div className="row g-4">
+              {videoData.map((video) => (
+                <div
+                  key={video.name}
+                  className="col-12"
+                  onClick={() => handleVideoClick(video.name)}
+                >
+                  <div className="card shadow-sm h-100">
+                    <img
+                      src={video.url}
+                      alt={video.name}
+                      className="card-img-top"
+                      style={{ aspectRatio: '16/9', objectFit: 'cover' }}
+                    />
+                    <div className="card-body">
+                      <h5 className="card-title">{video.name}</h5>
+                      <p className="card-text text-muted">{video.description}</p>
+                      <div className="text-muted">
+                        <span>{video.views} views</span>
+                        <span className="mx-2">•</span>
+                        <span>{video.channel}</span>
+                      </div>
+                    </div>
                   </div>
                 </div>
-              </div>
-            ))}
-          </div>
+              ))}
+            </div>
+          )}
         </div>
-      </main>
+      </div>
     </div>
   );
 };
 
-export default HomePage;
+export default YoutubeHomepage;
